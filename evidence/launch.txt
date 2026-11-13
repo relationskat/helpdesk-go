@@ -1,0 +1,39 @@
+Лабораторная № 1 — протокол запуска
+Дата проверки: 2026-11-13
+Проверяющий: Codex в рабочей среде владельца репозитория.
+Хост: macOS darwin/arm64, Docker Desktop, Docker CLI 29.2.1.
+Чистая среда: новый Linux-контейнер, Alpine Linux 3.22.1, linux/arm64.
+Go: go1.24.5 linux/arm64.
+Образ: golang:1.24.5-alpine3.22
+Digest: sha256:daae04ebad0c21149979cd8e9db38f565ecefd8547cf4a591240dc1972cf1399
+
+Команда: sh scripts/check-container.sh
+Результат: exit 0. Исходники скопированы в образ, бинарный файл собран
+CGO_ENABLED=0 go build -trimpath -o /helpdesk ./src/cmd/helpdesk.
+Приложение запущено в новом scratch-контейнере от UID 65532.
+GET /healthz: успешно.
+POST /tickets: создана заявка со статусом open.
+GET /tickets: созданная заявка найдена по ID и заголовку.
+PASS: health, create ticket, find created ticket
+Контейнер остановлен и удалён скриптом.
+
+Дополнительная проверка в golang:1.24.5-alpine3.22:
+go vet ./...: exit 0.
+go test ./...: exit 0, [no test files] — это проверка сборки,
+не свидетельство наличия модульных тестов.
+
+Проблема среды: локальные go vet / go test на macOS сообщили
+package ... is not in std. Проверки выполнены в изолированном
+официальном образе Go; установленный на хосте toolchain не изменялся.
+
+GitHub API: репозиторий публичный, main — ветка по умолчанию.
+Текущие credentials: pull=true, push=false, admin=false, maintain=false.
+Отправка ветки и настройка защиты недоступны с текущими credentials.
+Опубликованы issues #1 (product), #2–4 (вопросы). Назначение question: HTTP 403.
+Создание отсутствующих меток: HTTP 404. PR, согласование, слияние и тег не выполнены.
+
+Повторная проверка после разделения слоёв (2026-11-13):
+config, api/http, dto, domain, service, store.
+go vet ./... и go test ./... в golang:1.24.5-alpine3.22 — exit 0.
+sh scripts/check-container.sh — exit 0.
+PASS: health, create ticket, find created ticket
