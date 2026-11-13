@@ -1,0 +1,27 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+title US-6 / FR-6 — успех и ошибка перехода
+actor "Назначенный специалист" as U
+participant "HTTP / DTO" as H
+participant "Сервис заявок" as S
+database "Хранилище SQLite" as D
+U -> H : ID заявки, целевой статус, токен
+H -> H : Проверить сессию и входной DTO
+H -> S : Изменить статус(caller_id, ID, status)
+S -> D : Начать транзакцию и прочитать заявку
+D --> S : Текущий статус и исполнитель
+S -> S : Проверить исполнителя и переход
+alt open → in_progress или in_progress → closed
+ S -> D : Сохранить статус, commit
+ D --> S : Сохранено
+ S --> H : ID и новый статус
+ H --> U : 200, ID и статус
+else Недопустимый переход (например open → closed)
+ S -> D : Завершить без записи (rollback)
+ S --> H : invalid_transition
+ H --> U : 409, error=invalid_transition
+end
+note over S,D : При ошибке данные не меняются.
+@enduml

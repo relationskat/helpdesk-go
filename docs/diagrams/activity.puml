@@ -1,0 +1,36 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+start
+partition "Заявитель" {
+ :Войти (FR-1 / US-1);
+ :Получить и выбрать категорию (FR-8 / US-8);
+ :Ввести заголовок и описание;
+}
+partition "HelpDesk Go" {
+ :Проверить входные данные;
+ if (Данные корректны?) then (да)
+  :Сохранить заявку open (FR-2 / US-2);
+ else (нет)
+  :Вернуть 400, не создавать заявку;
+  stop
+ endif
+}
+partition "Специалист" {
+ :Открыть очередь и карточку (FR-3, FR-4);
+ :Назначить себя (FR-5 / US-5);
+ :Начать обработку: in_progress (FR-6 / US-6);
+}
+partition "Заявитель / специалист" {
+ :Обсудить решение (FR-7 / US-7);
+}
+partition "Назначенный специалист" {
+ :Завершить обработку: closed (FR-6 / US-6);
+}
+partition "HelpDesk Go" {
+ :Сохранить результат;
+ :Оставить карточку доступной для чтения;
+}
+stop
+@enduml

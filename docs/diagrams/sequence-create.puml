@@ -1,0 +1,23 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+title US-2 / FR-2, FR-8 — целевое создание заявки
+actor "Заявитель" as U
+participant "HTTP / DTO" as H
+participant "Сессия" as A
+participant "Сервис заявок" as S
+database "Хранилище SQLite" as D
+U -> H : title, description, category_id, токен
+H -> A : Проверить сессию и роль
+A --> H : author_id=1, заявитель
+H -> S : Создать(author_id, поля)
+S -> S : Проверить обязательные поля
+S -> D : Проверить category_id
+D --> S : Категория существует
+S -> D : Сохранить заявку open
+D --> S : Заявка с новым ID (после commit)
+S --> H : Заявка
+H --> U : 201, DTO заявки
+note over S,D : NFR-4: ответ об успехе после сохранения
+@enduml

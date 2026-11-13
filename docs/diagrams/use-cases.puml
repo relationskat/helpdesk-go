@@ -1,0 +1,33 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+left to right direction
+actor "Заявитель" as User
+actor "Специалист" as Agent
+rectangle "HelpDesk Go (целевая система)" {
+ usecase "FR-1 Войти" as UC1
+ usecase "FR-2 Создать заявку" as UC2
+ usecase "FR-3 Просмотреть список" as UC3
+ usecase "FR-4 Открыть карточку" as UC4
+ usecase "FR-5 Назначить себя" as UC5
+ usecase "FR-6 Изменить статус" as UC6
+ usecase "FR-7 Читать и добавлять комментарии" as UC7
+ usecase "FR-8 Выбрать категорию" as UC8
+}
+User --> UC1
+Agent --> UC1
+User --> UC2
+User --> UC3
+Agent --> UC3
+User --> UC4
+Agent --> UC4
+Agent --> UC5
+Agent --> UC6
+User --> UC7
+Agent --> UC7
+User --> UC8
+note right of UC6 : Только назначенный специалист
+note bottom of UC7 : Запись только в open / in_progress.\nЗаявитель — только свои заявки.
+note bottom of UC3 : Заявитель — свои, специалист — все.
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+hide methods
+class "Пользователь" as User {
+ id: integer
+ {field} login: string {unique}
+ password_hash: string
+ role: заявитель | специалист
+}
+class "Заявка" as Ticket {
+ id: integer
+ title: string
+ description: string
+ author_id: integer
+ category_id: integer
+ assignee_id: integer?
+ status: open | in_progress | closed
+}
+class "Комментарий" as Comment {
+ id: integer
+ ticket_id: integer
+ author_id: integer
+ text: string
+ created_at: UTC timestamp
+}
+class "Категория" as Category {
+ id: integer
+ name: string
+ description: string
+}
+User "1" -- "0..*" Ticket : автор
+User "0..1" -- "0..*" Ticket : исполнитель
+Category "1" -- "0..*" Ticket : категория
+Ticket "1" -- "0..*" Comment : обсуждение
+User "1" -- "0..*" Comment : автор
+note bottom of User : Исполнитель должен иметь роль специалиста.\nРоли и статусы — атрибуты, не отдельные сущности.
+@enduml
