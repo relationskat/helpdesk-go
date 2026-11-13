@@ -1,0 +1,20 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+left to right direction
+actor "Заявитель" as User
+actor "Специалист" as Agent
+rectangle "Граница HelpDesk Go (целевое состояние)" {
+ rectangle "HTTP/JSON API\nFR-1–FR-8" as API
+ database "SQLite\nвстроенное хранилище" as DB
+ API --> DB : данные
+}
+User --> API : curl / HTTP-клиент\nсвои заявки
+Agent --> API : curl / HTTP-клиент\nобщая очередь
+note bottom of API
+Внешние сервисы приложению не требуются.
+GitHub и Docker Hub используются при разработке,
+а не при обработке заявок.
+end note
+@enduml

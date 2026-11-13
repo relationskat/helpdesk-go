@@ -1,0 +1,14 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName SansSerif
+skinparam shadowing false
+[*] --> open : FR-2 / US-2: создать
+open --> open : FR-5 / US-5: назначить себя
+open --> in_progress : FR-6 / US-6: начать обработку\n[текущий пользователь = исполнитель]
+in_progress --> closed : FR-6 / US-6: завершить\n[текущий пользователь = исполнитель]
+closed --> [*] : конец жизненного цикла обработки
+note top of open : FR-5: назначение только специалистом, если исполнитель не задан.\nПовтор того же назначения идемпотентен.\nFR-7: комментарии разрешены.
+note right of in_progress : FR-7: комментарии разрешены.
+note right of closed : Карточка и обсуждение доступны для чтения.\nДобавление комментария запрещено.\nПовторного открытия нет.\nКонец обработки не удаляет данные.
+note bottom of open : Прочие переходы отклоняются без изменения данных.
+@enduml
