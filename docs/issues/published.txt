@@ -1,0 +1,4 @@
+product.md https://github.com/relationskat/helpdesk-go/issues/1
+question-storage.md https://github.com/relationskat/helpdesk-go/issues/2
+question-access.md https://github.com/relationskat/helpdesk-go/issues/3
+question-status.md https://github.com/relationskat/helpdesk-go/issues/4
