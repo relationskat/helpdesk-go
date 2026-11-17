@@ -1,0 +1,11 @@
+ЛР3: проверка контракта POST /tickets, 17.11.2026.
+Проверяющий: Codex в среде владельца репозитория.
+Среда: новый Linux arm64 контейнер helpdesk-go:lab-3, runtime scratch.
+Сборка Dockerfile: exit 0.
+Успех: title="  Не работает VPN  " -> 201 application/json,
+{"id":1,"title":"Не работает VPN","status":"open"}.
+Ошибка: title="   " -> 400 text/plain; charset=utf-8,
+expected JSON with non-empty title (max 4096 bytes) + LF.
+GET /tickets после ошибки: одна исходная заявка с ID 1.
+PASS: оба примера совпали с контрактом, ошибка не изменила данные.
+Ревью другим студентом не выполнялось в рамках этой проверки.
