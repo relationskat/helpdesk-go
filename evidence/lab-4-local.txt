@@ -1,0 +1,24 @@
+ЛР4: локальная проверка, 17.11.2026.
+Среда: Go 1.24.5, Linux arm64, golang:1.24.5-alpine3.22 в Docker.
+Проверяющий: Codex в рабочей среде владельца репозитория.
+
+Зелёная проверка:
+go mod download -> exit 0, no module dependencies to download.
+go test -count=1 -v ./src/... -> exit 0.
+TestCreateTicketSuccess -> PASS.
+TestCreateTicketBlankTitle -> PASS.
+go vet ./src/... -> exit 0.
+
+Красная демонстрация в отдельной копии src внутри временного контейнера:
+const expectedCreatedID = 2 вместо 1.
+go test -count=1 -v ./src/internal/api/http -> exit 1.
+TestCreateTicketSuccess -> FAIL:
+  ticket = {ID:1 Title:Не работает VPN Status:open},
+  want {ID:2 Title:Не работает VPN Status:open}.
+TestCreateTicketBlankTitle -> PASS.
+Скрипт проверки подтвердил ожидаемое падение и завершился exit 0.
+Рабочие файлы не изменялись демонстрацией; в ветке expectedCreatedID = 1.
+
+Это локальные результаты, не журналы GitHub Actions.
+Красный и зелёный GitHub Actions run, их URL, PR, ревью,
+слияние и тег lab-4 ещё должны быть выполнены владельцем.

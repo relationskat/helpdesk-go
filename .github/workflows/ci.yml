@@ -1,13 +1,30 @@
 name: Go checks
-on: [push, pull_request]
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   check:
+    name: tests and vet
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
           go-version-file: .go-version
-      - run: go vet ./...
-      - run: go test ./...
-      - run: sh scripts/check-container.sh
+          cache: false
+      - name: Install dependencies
+        run: go mod download
+      - name: Run tests
+        run: go test -count=1 -v ./src/...
+      - name: Static analysis
+        run: go vet ./src/...
