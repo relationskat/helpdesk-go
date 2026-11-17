@@ -15,7 +15,7 @@ import (
 	"github.com/relationskat/helpdesk-go/src/internal/store"
 )
 
-const expectedCreatedID = 2
+const expectedCreatedID = 1
 
 func newHandler() http.Handler {
 	return api.NewServer(api.Deps{
